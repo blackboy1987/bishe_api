@@ -4,6 +4,7 @@ package com.bootx.service.impl;
 import com.bootx.common.Page;
 import com.bootx.common.Pageable;
 import com.bootx.entity.Admin;
+import com.bootx.entity.Department;
 import com.bootx.repository.AdminRepository;
 import com.bootx.service.AdminService;
 import jakarta.annotation.Resource;
@@ -65,11 +66,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<Admin> findList(Pageable pageable, String username, Date beginDate, Date endDate) {
+    public Page<Admin> findList(Pageable pageable, String username, Date beginDate, Date endDate, Department department) {
         org.springframework.data.domain.Page<Admin> all = adminRepository.findAll((Specification<Admin>) (root, criteriaQuery, criteriaBuilder) -> {
             Predicate restriction = criteriaBuilder.conjunction();
             if (StringUtils.isNotBlank(username)) {
                 restriction = criteriaBuilder.and(criteriaBuilder.like(root.get("username"), "%" + username + "%"));
+            }
+            if (department != null) {
+                restriction = criteriaBuilder.and(criteriaBuilder.equal(root.get("department"), department));
             }
             if (beginDate != null) {
                 restriction = criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), beginDate));

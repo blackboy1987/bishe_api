@@ -1,9 +1,11 @@
 package com.bootx.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author blackboy1987
@@ -21,6 +23,14 @@ public class Admin extends BaseEntity{
     @Comment("登录密码")
     private String password;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Comment("部门")
+    private Department department;
+
+    @ManyToMany(mappedBy = "admins",fetch = FetchType.LAZY)
+    private Set<Role> roles = new HashSet<>();
+
     public String getUsername() {
         return username;
     }
@@ -37,5 +47,51 @@ public class Admin extends BaseEntity{
         this.password = password;
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    @Transient
+    @JsonView({PageView.class})
+    public Long getDepartmentId() {
+        if (department == null) {
+            return null;
+        }
+        return department.getId();
+    }
+
+    @Transient
+    @JsonView({PageView.class})
+    public String getDepartmentName() {
+        if (department == null) {
+            return null;
+        }
+        return department.getName();
+    }
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Transient
+    @JsonView({PageView.class})
+    public List<Map<String,Object>> getRoleList() {
+        if (roles.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return roles.stream().map(item->{
+            Map<String,Object> map = new HashMap<>();
+            map.put("id", item.getId());
+            map.put("name", item.getName());
+            return map;
+        }).collect(Collectors.toList());
+    }
 
 }

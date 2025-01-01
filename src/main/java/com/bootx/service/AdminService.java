@@ -3,6 +3,7 @@ package com.bootx.service;
 import com.bootx.common.Page;
 import com.bootx.common.Pageable;
 import com.bootx.entity.Admin;
+import com.bootx.entity.Department;
 
 import java.util.Date;
 
@@ -23,5 +24,5 @@ public interface AdminService {
 
     void delete(Admin admin);
 
-    Page<Admin> findList(Pageable pageable, String username, Date beginDate, Date endDate);
+    Page<Admin> findList(Pageable pageable, String username, Date beginDate, Date endDate, Department department);
 }

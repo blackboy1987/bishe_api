@@ -2,6 +2,7 @@ package com.bootx.service.impl;
 
 import com.bootx.common.Page;
 import com.bootx.common.Pageable;
+import com.bootx.entity.Department;
 import com.bootx.entity.Role;
 import com.bootx.repository.RoleRepository;
 import com.bootx.service.RoleService;
@@ -16,7 +17,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author blackboy1987
@@ -50,24 +54,35 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<Role> findPage(Pageable pageable, String name, String memo, Date beginDate , Date endDate) {
+    public Page<Role> findPage(Pageable pageable, String name, String memo, Date beginDate , Date endDate, Department department) {
         org.springframework.data.domain.Page<Role> all = roleRepository.findAll((Specification<Role>) (root, criteriaQuery, criteriaBuilder) -> {
-            Predicate conjunction = criteriaBuilder.conjunction();
+            Predicate restriction = criteriaBuilder.conjunction();
             if(StringUtils.isNotBlank(name)){
-                conjunction = criteriaBuilder.and(conjunction, criteriaBuilder.like(root.get("name"), "%"+name+"%"));
+                restriction = criteriaBuilder.and(restriction, criteriaBuilder.like(root.get("name"), "%"+name+"%"));
+            }
+            if (department != null) {
+                restriction = criteriaBuilder.and(criteriaBuilder.equal(root.get("department"), department));
             }
             if(StringUtils.isNotBlank(memo)){
-                conjunction = criteriaBuilder.and(conjunction, criteriaBuilder.like(root.get("memo"), "%"+name+"%"));
+                restriction = criteriaBuilder.and(restriction, criteriaBuilder.like(root.get("memo"), "%"+name+"%"));
             }
             if(beginDate != null){
-                conjunction = criteriaBuilder.and(conjunction, criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), beginDate));
+                restriction = criteriaBuilder.and(restriction, criteriaBuilder.greaterThanOrEqualTo(root.get("createdDate"), beginDate));
             }
             if(endDate != null){
-                conjunction = criteriaBuilder.and(conjunction, criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"), endDate));
+                restriction = criteriaBuilder.and(restriction, criteriaBuilder.lessThanOrEqualTo(root.get("createdDate"), endDate));
             }
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")));
-            return conjunction;
+            return restriction;
         }, PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()));
         return new Page<>(all.getContent(),all.getTotalElements(),pageable);
+    }
+
+    @Override
+    public List<Role> findListByIds(Long[] ids) {
+        List<Role> roles = new ArrayList<>();
+        Iterable<Role> allById = roleRepository.findAllById(Arrays.stream(ids).toList());
+        allById.forEach(roles::add);
+        return roles;
     }
 }
