@@ -18,7 +18,7 @@ public class Admin extends BaseEntity{
 
     @Comment("用户名")
     @Column(length = 30,unique = true)
-    @JsonView({BaseEntity.PageView.class})
+    @JsonView({PageView.class})
     private String username;
 
     @Column(length = 100)
@@ -30,7 +30,7 @@ public class Admin extends BaseEntity{
     @Comment("部门")
     private Department department;
 
-    @ManyToMany(mappedBy = "admins",fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<>();
 
     public String getUsername() {

@@ -75,16 +75,6 @@ public class Role extends BaseEntity{
         return department;
     }
 
-    public Set<Admin> getAdmins() {
-        return admins;
-    }
-
-    public void setAdmins(Set<Admin> admins) {
-        this.admins = admins;
-    }
-
-
-
     /**
      * 重写equals方法
      *
