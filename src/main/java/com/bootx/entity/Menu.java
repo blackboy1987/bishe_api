@@ -3,13 +3,20 @@ package com.bootx.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author blackboy1987
+ */
 @Entity
+@Comment("菜单")
 public class Menu extends BaseEntity {
 
     public static final String TREE_PATH_SEPARATOR = ",";
@@ -17,7 +24,7 @@ public class Menu extends BaseEntity {
     @OneToMany(mappedBy = "parent")
     private Set<Menu> children = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Menu parent;
 
     @JsonView({PageView.class})
@@ -34,6 +41,9 @@ public class Menu extends BaseEntity {
     private Integer grade;
 
     private String treePath;
+
+    @OneToMany(mappedBy = "menu",fetch = FetchType.LAZY)
+    private Set<Permission> permissions = new HashSet<>();
 
     public Set<Menu> getChildren() {
         return children;
@@ -91,6 +101,13 @@ public class Menu extends BaseEntity {
         this.treePath = treePath;
     }
 
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
     @Transient
     public Long[] getParentIds() {
@@ -115,12 +132,10 @@ public class Menu extends BaseEntity {
         }
         Menu parent = menu.getParent();
         if (parent != null) {
-            parents.add(0, parent);
+            parents.addFirst(parent);
             recursiveParents(parents, parent);
         }
     }
-
-
 
     @Transient
     @JsonView({PageView.class})
@@ -129,5 +144,29 @@ public class Menu extends BaseEntity {
             return null;
         }
         return parent.getId();
+    }
+
+
+
+    /**
+     * 重写equals方法
+     *
+     * @param obj
+     *            对象
+     * @return 是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * 重写hashCode方法
+     *
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

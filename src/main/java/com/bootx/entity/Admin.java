@@ -2,6 +2,8 @@ package com.bootx.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
 
 import java.util.*;
@@ -94,4 +96,25 @@ public class Admin extends BaseEntity{
         }).collect(Collectors.toList());
     }
 
+    /**
+     * 重写equals方法
+     *
+     * @param obj
+     *            对象
+     * @return 是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * 重写hashCode方法
+     *
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 }

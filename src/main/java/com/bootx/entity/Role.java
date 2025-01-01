@@ -2,12 +2,18 @@ package com.bootx.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author blackboy1987
+ */
 @Entity
+@Comment("角色")
 public class Role extends BaseEntity{
 
     @Column(nullable = false)
@@ -75,5 +81,29 @@ public class Role extends BaseEntity{
 
     public void setAdmins(Set<Admin> admins) {
         this.admins = admins;
+    }
+
+
+
+    /**
+     * 重写equals方法
+     *
+     * @param obj
+     *            对象
+     * @return 是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * 重写hashCode方法
+     *
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

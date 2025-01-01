@@ -3,6 +3,8 @@ package com.bootx.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
@@ -10,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author blackboy1987
+ */
 @Entity
 @Comment("部门")
 public class Department extends BaseEntity {
@@ -19,7 +24,7 @@ public class Department extends BaseEntity {
     @OneToMany(mappedBy = "parent")
     private Set<Department> children = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @Comment("上级部门")
     private Department parent;
 
@@ -38,6 +43,9 @@ public class Department extends BaseEntity {
 
     @Comment("层级树")
     private String treePath;
+
+    @OneToMany(mappedBy = "department",fetch = FetchType.LAZY)
+    private Set<Role> roles = new HashSet<>();
 
     public Set<Department> getChildren() {
         return children;
@@ -87,6 +95,13 @@ public class Department extends BaseEntity {
         this.treePath = treePath;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     @Transient
     public Long[] getParentIds() {
@@ -105,13 +120,13 @@ public class Department extends BaseEntity {
         return parents;
     }
 
-    private void recursiveParents(List<Department> parents, Department menu) {
-        if (menu == null) {
+    private void recursiveParents(List<Department> parents, Department department) {
+        if (department == null) {
             return;
         }
-        Department parent = menu.getParent();
+        Department parent = department.getParent();
         if (parent != null) {
-            parents.add(0, parent);
+            parents.addFirst(parent);
             recursiveParents(parents, parent);
         }
     }
@@ -125,5 +140,29 @@ public class Department extends BaseEntity {
             return null;
         }
         return parent.getId();
+    }
+
+
+
+    /**
+     * 重写equals方法
+     *
+     * @param obj
+     *            对象
+     * @return 是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * 重写hashCode方法
+     *
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }

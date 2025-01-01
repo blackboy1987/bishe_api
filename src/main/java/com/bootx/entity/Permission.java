@@ -1,9 +1,11 @@
 package com.bootx.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
 
 /**
@@ -13,7 +15,7 @@ import org.hibernate.annotations.Comment;
 @Comment("权限控制模块")
 public class Permission extends BaseEntity{
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Menu menu;
 
     @Comment("权限名称")
@@ -74,5 +76,29 @@ public class Permission extends BaseEntity{
             return null;
         }
         return menu.getId();
+    }
+
+
+
+    /**
+     * 重写equals方法
+     *
+     * @param obj
+     *            对象
+     * @return 是否相等
+     */
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    /**
+     * 重写hashCode方法
+     *
+     * @return HashCode
+     */
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 }
