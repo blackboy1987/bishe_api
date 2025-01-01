@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author blackboy1987
@@ -80,20 +80,6 @@ public class Admin extends BaseEntity{
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    @Transient
-    @JsonView({PageView.class})
-    public List<Map<String,Object>> getRoleList() {
-        if (roles.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return roles.stream().map(item->{
-            Map<String,Object> map = new HashMap<>();
-            map.put("id", item.getId());
-            map.put("name", item.getName());
-            return map;
-        }).collect(Collectors.toList());
     }
 
     /**
