@@ -25,4 +25,6 @@ public interface AdminService {
     void delete(Admin admin);
 
     Page<Admin> findList(Pageable pageable, String username, Date beginDate, Date endDate, Department department);
+
+    Admin findByUsername(String username);
 }

@@ -87,4 +87,13 @@ public class AdminServiceImpl implements AdminService {
         }, PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()));
         return new Page<>(all.getContent(),all.getTotalElements(), pageable);
     }
+
+    @Override
+    public Admin findByUsername(String username) {
+        List<Admin> byUsername = adminRepository.findByUsername(username);
+        if(byUsername.isEmpty()){
+            return null;
+        }
+        return byUsername.getFirst();
+    }
 }
