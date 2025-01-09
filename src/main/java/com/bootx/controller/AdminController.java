@@ -6,6 +6,7 @@ import com.bootx.entity.Admin;
 import com.bootx.entity.BaseEntity;
 import com.bootx.entity.Department;
 import com.bootx.entity.Role;
+import com.bootx.security.CurrentUser;
 import com.bootx.service.AdminService;
 import com.bootx.service.DepartmentService;
 import com.bootx.service.RoleService;
