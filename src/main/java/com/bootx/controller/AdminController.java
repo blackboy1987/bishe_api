@@ -1,12 +1,12 @@
 package com.bootx.controller;
 
+import com.bootx.audit.Audit;
 import com.bootx.common.Pageable;
 import com.bootx.common.Result;
 import com.bootx.entity.Admin;
 import com.bootx.entity.BaseEntity;
 import com.bootx.entity.Department;
 import com.bootx.entity.Role;
-import com.bootx.security.CurrentUser;
 import com.bootx.service.AdminService;
 import com.bootx.service.DepartmentService;
 import com.bootx.service.RoleService;
@@ -38,8 +38,9 @@ public class AdminController {
 
 
     @PostMapping("/list")
+    @Audit(action="账号列表")
     @JsonView({BaseEntity.PageView.class})
-    public Result list(Pageable pageable,String username, Date beginDate, Date endDate,Long departmentId) {
+    public Result list(Pageable pageable, String username, Date beginDate, Date endDate, Long departmentId) {
         return Result.success(adminService.findList(pageable,username,beginDate,endDate,departmentService.findById(departmentId)));
     }
 
@@ -102,6 +103,18 @@ public class AdminController {
     @PostMapping("/delete")
     public Result delete(Long id) {
         adminService.delete(id);
+        return Result.success();
+    }
+
+
+    @PostMapping("/unLock")
+    @Audit(action="账号解锁")
+    public Result unLock(Long id) {
+        Admin admin = adminService.findById(id);
+        if(admin==null){
+            return Result.error("账号不存在");
+        }
+        adminService.unLock(admin);
         return Result.success();
     }
 }

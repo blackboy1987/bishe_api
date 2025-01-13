@@ -1,4 +1,4 @@
-package com.bootx.security;
+ package com.bootx.security;
 
 import com.bootx.entity.Admin;
 import com.bootx.service.AdminService;

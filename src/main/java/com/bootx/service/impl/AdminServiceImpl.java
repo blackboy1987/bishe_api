@@ -3,20 +3,27 @@ package com.bootx.service.impl;
 
 import com.bootx.common.Page;
 import com.bootx.common.Pageable;
+import com.bootx.common.Result;
 import com.bootx.entity.Admin;
 import com.bootx.entity.Department;
 import com.bootx.repository.AdminRepository;
 import com.bootx.service.AdminService;
+import com.bootx.util.JWTUtils;
+import com.bootx.util.WebUtils;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author blackboy1987
@@ -27,9 +34,41 @@ public class AdminServiceImpl implements AdminService {
     @Resource
     private AdminRepository adminRepository;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
-    public void save(Admin admin) {
-        adminRepository.save(admin);
+    public Admin save(Admin admin) {
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    public Admin update(Admin admin) {
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    public void lock(Admin admin) {
+        int errorCount = 0;
+        String cacheKey = "login:lock:" + admin.getUsername();
+        try {
+            errorCount = Integer.parseInt(Objects.requireNonNull(stringRedisTemplate.opsForValue().get(cacheKey)));
+        }catch (Exception ignored){
+            stringRedisTemplate.opsForValue().set(cacheKey,"0",30, TimeUnit.MINUTES);
+        }
+        if(errorCount>=5){
+            admin.setIsLocked(true);
+            update(admin);
+        }
+        stringRedisTemplate.opsForValue().increment("login:lock:"+admin.getUsername());
+    }
+
+    @Override
+    public void unLock(Admin admin) {
+        String cacheKey = "login:lock:" + admin.getUsername();
+        admin.setIsLocked(false);
+        update(admin);
+        stringRedisTemplate.delete(cacheKey);
     }
 
     @Override
@@ -95,5 +134,29 @@ public class AdminServiceImpl implements AdminService {
             return null;
         }
         return byUsername.getFirst();
+    }
+
+    @Override
+    public Admin getCurrent() {
+        try {
+            String token = WebUtils.getRequest().getHeader("token");
+            String id = JWTUtils.getId(token);
+            return findById(Long.parseLong(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Admin getCurrent(HttpServletRequest request) {
+        try {
+            String token = request.getHeader("token");
+            String id = JWTUtils.getId(token);
+            return findById(Long.parseLong(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

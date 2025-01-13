@@ -29,6 +29,10 @@ public class Admin extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @Comment("部门")
     private Department department;
+    
+    @Comment("是否锁定")
+    @JsonView({PageView.class})
+    private Boolean isLocked;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<>();
@@ -55,6 +59,14 @@ public class Admin extends BaseEntity{
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean locked) {
+        isLocked = locked;
     }
 
     @Transient
