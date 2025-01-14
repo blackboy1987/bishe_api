@@ -9,6 +9,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
+/**
+ * @author black
+ */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
