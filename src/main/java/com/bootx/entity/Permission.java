@@ -1,10 +1,7 @@
 package com.bootx.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
@@ -30,9 +27,10 @@ public class Permission extends BaseEntity{
     @JsonView({PageView.class})
     private String memo;
 
-    @Comment("权限操作符")
+    @Comment("权限资源。多个资源采用英文分号进行分割")
+    @Column(length = 2000)
     @JsonView({PageView.class})
-    private String action;
+    private String resource;
 
     @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<>();
@@ -61,12 +59,12 @@ public class Permission extends BaseEntity{
         this.memo = memo;
     }
 
-    public String getAction() {
-        return action;
+    public String getResource() {
+        return resource;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
     public Set<Role> getRoles() {

@@ -66,7 +66,7 @@ public class PermissionController {
             return Result.error("菜单不存在");
         }
         byId.setName(permission.getName());
-        byId.setAction(permission.getAction());
+        byId.setResource(permission.getResource());
         permissionService.save(byId);
         return Result.success();
     }

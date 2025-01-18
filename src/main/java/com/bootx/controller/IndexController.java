@@ -35,6 +35,8 @@ public class IndexController {
     public Result currentUser(@CurrentUser Admin admin){
         HashMap<Object, Object> data = new HashMap<>();
         data.put("username",admin.getUsername());
+
+
         return Result.success(data);
     }
 
