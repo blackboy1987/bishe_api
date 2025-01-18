@@ -13,6 +13,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.io.IOException;
 
+/**
+ * @author black
+ */
 public class SingleLoginInterceptor implements HandlerInterceptor {
 
     @Resource

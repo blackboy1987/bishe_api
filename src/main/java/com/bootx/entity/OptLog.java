@@ -8,6 +8,9 @@ import org.hibernate.annotations.Comment;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author black
+ */
 @Entity
 @Comment("操作日志")
 public class OptLog extends BaseEntity{

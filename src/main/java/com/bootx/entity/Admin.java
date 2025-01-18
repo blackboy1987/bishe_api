@@ -25,7 +25,6 @@ public class Admin extends BaseEntity{
     @Comment("登录密码")
     private String password;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Comment("部门")
     private Department department;

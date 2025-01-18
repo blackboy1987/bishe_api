@@ -14,6 +14,13 @@ import java.util.List;
 @Repository
 public interface AdminRepository extends CrudRepository<Admin,Long>, PagingAndSortingRepository<Admin, Long>, JpaSpecificationExecutor<Admin> {
 
+    /**
+     * 根据用户名查询用户
+     * @param username
+     *      用户名
+     * @return
+     *      用户列表
+     */
     List<Admin> findByUsername(String username);
 
 }
