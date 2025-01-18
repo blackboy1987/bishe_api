@@ -27,11 +27,24 @@ public class Menu extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Menu parent;
 
+    @Comment("菜单名称")
     @JsonView({PageView.class})
+    @Column(nullable = false)
     private String name;
 
+    @Comment("路由")
     @JsonView({PageView.class})
+    @Column(nullable = false)
     private String url;
+
+    @Comment("菜单图标")
+    @JsonView({PageView.class})
+    private String icon;
+
+    @Comment("菜单对应的组件")
+    @Column(nullable = false)
+    @JsonView({PageView.class})
+    private String component;
 
     @Column(name = "orders")
     @JsonView({PageView.class})
@@ -99,6 +112,22 @@ public class Menu extends BaseEntity {
 
     public void setTreePath(String treePath) {
         this.treePath = treePath;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
     }
 
     public Set<Permission> getPermissions() {

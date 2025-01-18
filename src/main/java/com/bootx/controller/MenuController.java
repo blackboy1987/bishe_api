@@ -77,6 +77,8 @@ public class MenuController {
         byId.setUrl(menu.getUrl());
         byId.setParent(menu.getParent());
         byId.setParent(menu.getParent());
+        byId.setIcon(menu.getIcon());
+        byId.setComponent(menu.getComponent());
         menuService.save(byId);
         return Result.success();
     }

@@ -5,6 +5,9 @@ import com.bootx.common.Pageable;
 import com.bootx.entity.Menu;
 import com.bootx.entity.Permission;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author blackboy1987
  */
@@ -20,4 +23,5 @@ public interface PermissionService {
 
     Page<Permission> findPage(Pageable pageable, Menu menu);
 
+    List<Permission> findByIds(List<Long> ids);
 }

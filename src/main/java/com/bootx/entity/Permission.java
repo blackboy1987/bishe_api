@@ -3,10 +3,14 @@ package com.bootx.entity;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Comment;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author blackboy1987
@@ -29,6 +33,9 @@ public class Permission extends BaseEntity{
     @Comment("权限操作符")
     @JsonView({PageView.class})
     private String action;
+
+    @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
+    private Set<Role> roles = new HashSet<>();
 
     public Menu getMenu() {
         return menu;
@@ -60,6 +67,14 @@ public class Permission extends BaseEntity{
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @JsonView({PageView.class})

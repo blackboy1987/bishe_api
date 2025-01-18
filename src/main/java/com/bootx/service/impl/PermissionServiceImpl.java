@@ -10,11 +10,14 @@ import com.bootx.repository.PermissionRepository;
 import com.bootx.service.PermissionService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,6 +60,13 @@ public class PermissionServiceImpl implements PermissionService {
             return restriction;
         }, PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()));
         return new Page<>(all.getContent(),all.getTotalElements(), pageable);
+    }
+
+    @Override
+    public List<Permission> findByIds(List<Long> ids) {
+        List<Permission> all = new ArrayList<>();
+        permissionRepository.findAllById(ids).forEach(all::add);
+        return all;
     }
 
 }

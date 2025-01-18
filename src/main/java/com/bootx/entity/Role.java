@@ -32,6 +32,9 @@ public class Role extends BaseEntity{
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<Admin> admins = new HashSet<>();
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Permission> permissions = new HashSet<>();
+
     public String getName() {
         return name;
     }
@@ -51,6 +54,22 @@ public class Role extends BaseEntity{
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    public Set<Admin> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(Set<Admin> admins) {
+        this.admins = admins;
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     @Transient
