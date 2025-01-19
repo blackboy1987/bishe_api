@@ -1,7 +1,10 @@
 package com.bootx.entity;
 
+import com.bootx.util.CommonUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Comment;
 
 @Entity
@@ -21,11 +24,9 @@ public class LoginLog extends BaseEntity{
     private String password;
 
     @Comment("登录的userAgent信息")
-    @JsonView({PageView.class})
     private String userAgent;
 
     @Comment("登录的ua信息")
-    @JsonView({PageView.class})
     private String ua;
 
     @Comment("登录的结果")
@@ -78,5 +79,22 @@ public class LoginLog extends BaseEntity{
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    @Transient
+    @JsonView({PageView.class})
+    public String getOs(){
+        if(StringUtils.isNotBlank(userAgent)){
+            return CommonUtils.getOperatingSystem(userAgent);
+        }
+        return "未知";
+    }
+    @Transient
+    @JsonView({PageView.class})
+    public String getBrowser(){
+        if(StringUtils.isNotBlank(ua)){
+            return CommonUtils.getBrowser(ua);
+        }
+        return "未知";
     }
 }

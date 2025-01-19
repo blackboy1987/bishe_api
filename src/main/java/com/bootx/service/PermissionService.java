@@ -2,6 +2,7 @@ package com.bootx.service;
 
 import com.bootx.common.Page;
 import com.bootx.common.Pageable;
+import com.bootx.entity.Admin;
 import com.bootx.entity.Menu;
 import com.bootx.entity.Permission;
 
@@ -24,4 +25,6 @@ public interface PermissionService {
     Page<Permission> findPage(Pageable pageable, Menu menu);
 
     List<Permission> findByIds(List<Long> ids);
+
+    Set<String> getAuthority(Admin admin);
 }

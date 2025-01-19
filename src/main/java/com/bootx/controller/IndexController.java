@@ -4,6 +4,7 @@ import com.bootx.common.Result;
 import com.bootx.entity.Admin;
 import com.bootx.security.CurrentUser;
 import com.bootx.service.AdminService;
+import com.bootx.service.PermissionService;
 import com.bootx.util.JWTUtils;
 import com.bootx.util.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,6 +27,9 @@ public class IndexController {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    @Resource
+    private PermissionService permissionService;
+
     @PostMapping("/index")
     public String index(){
         return "index";
@@ -35,6 +39,7 @@ public class IndexController {
     public Result currentUser(@CurrentUser Admin admin){
         HashMap<Object, Object> data = new HashMap<>();
         data.put("username",admin.getUsername());
+        data.put("authorities",permissionService.getAuthority(admin));
 
 
         return Result.success(data);
