@@ -1,6 +1,7 @@
 package com.bootx.config;
 
 import com.bootx.audit.OptLogHandlerMethodArgumentResolver;
+import com.bootx.interceptor.AuthorityInterceptor;
 import com.bootx.interceptor.CorsInterceptor;
 import com.bootx.interceptor.OptLogInterceptor;
 import com.bootx.interceptor.SingleLoginInterceptor;
@@ -42,11 +43,17 @@ public class WebConfig implements WebMvcConfigurer {
     public CorsInterceptor corsInterceptor() {
         return new CorsInterceptor();
     }
+    @Bean
+    public AuthorityInterceptor authorityInterceptor() {
+        return new AuthorityInterceptor();
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(corsInterceptor())
                 .addPathPatterns("/**");
+        registry.addInterceptor(authorityInterceptor())
+                .addPathPatterns("/api/**").excludePathPatterns("/api/login").excludePathPatterns("/api/currentUser").excludePathPatterns("/api/menus");
         registry.addInterceptor(singleLoginInterceptor()).addPathPatterns("/api/**").excludePathPatterns("/api/login");
         registry.addInterceptor(optLogInterceptor()).addPathPatterns("/api/**");
     }

@@ -16,7 +16,7 @@ import java.util.Date;
  * @author blackboy1987
  */
 @RestController
-@RequestMapping("/api/opt_log")
+@RequestMapping("/api/optLog")
 public class OptLogController {
 
     @Resource

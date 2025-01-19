@@ -17,7 +17,7 @@ import java.util.Date;
  * @author blackboy1987
  */
 @RestController
-@RequestMapping("/api/login_log")
+@RequestMapping("/api/loginLog")
 public class LoginLogController {
 
     @Resource
